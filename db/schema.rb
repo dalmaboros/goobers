@@ -10,9 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_23_121924) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_23_212255) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "interests", force: :cascade do |t|
+    t.string "name"
+    t.bigint "created_by_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_interests_on_created_by_id"
+  end
+
+  create_table "interests_users", id: false, force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "interest_id", null: false
+    t.index ["interest_id", "user_id"], name: "index_interests_users_on_interest_id_and_user_id"
+    t.index ["user_id", "interest_id"], name: "index_interests_users_on_user_id_and_interest_id"
+  end
 
   create_table "locations", force: :cascade do |t|
     t.string "city"
@@ -43,5 +58,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_23_121924) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "interests", "users", column: "created_by_id"
   add_foreign_key "users", "locations"
 end
