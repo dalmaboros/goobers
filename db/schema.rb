@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_23_212255) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_23_213254) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "conferences", force: :cascade do |t|
+    t.string "name", null: false
+    t.bigint "location_id", null: false
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.text "description"
+    t.string "website", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["location_id"], name: "index_conferences_on_location_id"
+  end
 
   create_table "interests", force: :cascade do |t|
     t.string "name"
@@ -58,6 +70,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_23_212255) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "conferences", "locations"
   add_foreign_key "interests", "users", column: "created_by_id"
   add_foreign_key "users", "locations"
 end
